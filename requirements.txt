@@ -1,0 +1,13 @@
+# sm_120 requires PyTorch 2.7+ with CUDA 12.8+ build
+# Install with: pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+torch>=2.7.0
+torchvision>=0.17.0
+timm>=0.6.12
+numpy
+opencv-python
+Pillow
+pyyaml
+tqdm
+lpips
+matplotlib
+wandb

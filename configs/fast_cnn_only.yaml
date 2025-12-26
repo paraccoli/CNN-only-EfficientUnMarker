@@ -1,0 +1,47 @@
+# Device selection
+device: cuda
+
+# Success criterion (detector score threshold)
+target_detection: 0.5
+
+# Global attack settings
+max_iterations: 120
+learning_rate: 0.01
+
+# Detector configuration (quick-only)
+detector:
+  mode: quick  # 'quick' uses MobileNetV3 branch only
+
+# Stage 1: Frequency analysis (keep enabled; ~5-10ms)
+stage1:
+  enabled: true
+  time_budget_ms: 10
+
+# Stage 2: Multi-scale attack
+stage2:
+  low_res_size: 256   # first stage resolution
+  low_iters: 40       # coarse optimization iterations
+  high_iters: 60      # fine-tuning iterations at 512
+
+# Stage 3: Quality refinement (disable for speed)
+stage3:
+  enabled: false
+
+# Early stopping & quality guard
+stopping:
+  psnr_min: 18.0        # soft guard floor (dB)
+  psnr_patience: 4      # checks to tolerate below floor before stopping
+
+# Loss weights (prioritize detector suppression with soft PSNR penalty)
+loss:
+  detector_weight: 1.0
+  freq_weight: 0.0
+  smooth_weight: 0.0
+  rec_region_weight: 0.0
+  w_bg: 0.0
+  psnr_penalty: 0.1           # lambda for soft PSNR penalty
+  psnr_penalty_floor: 18.0     # desired minimum PSNR
+
+# Optional quality parameters
+quality:
+  freq_smoothness_weight: 0.05
