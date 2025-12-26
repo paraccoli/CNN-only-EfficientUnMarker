@@ -66,7 +66,7 @@ requirements.txt
 README.md
 ```
 
-## Reference Performance (Phase A)
+## Reference Performance
 
 Measured on 44 real images from the Large-scale Common Watermark Dataset:
 
