@@ -27,17 +27,17 @@ Evaluation uses the **Large-scale Common Watermark Dataset**:
 
 ## Quick Start
 
-### 1. Install dependencies
+### Install dependencies
 
 ```txt
 pip install -r requirements.txt
 ```
 
-### 2. Download dataset (optional)
+### Download dataset (optional)
 
 Download the Large-scale Common Watermark Dataset from the link above and place it in `datasets/`.
 
-### 3. Run benchmark (example)
+### Run benchmark (example)
 
 ```txt
 python experiments/benchmark_cnn_only.py \
@@ -50,7 +50,7 @@ python experiments/benchmark_cnn_only.py \
 
 - `--wm_suffix v2` matches files like `xxxv2.jpg` (watermarked) to `xxx.jpg` (clean).
 
-### 4. Results
+### Results
 
 - Per-image metrics and aggregates are saved under `results/benchmarks/`.
 
