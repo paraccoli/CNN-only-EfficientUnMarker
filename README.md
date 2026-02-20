@@ -83,11 +83,9 @@ Measured on 44 real images from the Large-scale Common Watermark Dataset:
 
 ## 日本語解説 / Japanese Explanation
 
-### このリポジトリは何をするのか？
+**CNN-only EfficientUnMarker** は，画像に埋め込まれた **可視ウォーターマーク（透かし）を自動で除去する** パイプラインです．
 
-**CNN-only EfficientUnMarker** は、画像に埋め込まれた **可視ウォーターマーク（透かし）を自動で除去する** パイプラインです。
-
-ウォーターマーク除去を「攻撃問題」として捉え、CNNベースの検出器（MobileNetV3）を使ってウォーターマークが残っているかどうかを判定しながら、画像を反復的に最適化することで透かしを消去します。
+ウォーターマーク除去を「攻撃問題」として捉え，CNNベースの検出器（MobileNetV3）を使ってウォーターマークが残っているかどうかを判定しながら，画像を反復的に最適化することで透かしを消去します．
 
 #### 目標仕様
 
@@ -133,14 +131,14 @@ Measured on 44 real images from the Large-scale Common Watermark Dataset:
 
 #### Stage 1 — 周波数解析（`core/stage1_frequency.py`）
 
-**目的：** 画像のどの周波数帯域にウォーターマークが含まれているかを推定し、攻撃対象の帯域を絞り込む。
+**目的：** 画像のどの周波数帯域にウォーターマークが含まれているかを推定し，攻撃対象の帯域を絞り込む．
 
 **処理内容：**
 
-1. `torch.fft.rfft2` で画像をフーリエ変換し、周波数スペクトルを取得
+1. `torch.fft.rfft2` で画像をフーリエ変換し，周波数スペクトルを取得
 2. 周波数空間を8つの同心円状の帯域（バンド）に分割
 3. 各バンドのエネルギー・分散を計算
-4. MobileNetV3の画像エンコーダと周波数特徴を組み合わせ、融合ネットワークで「どのバンドを攻撃すべきか」を示すマスクを出力
+4. MobileNetV3の画像エンコーダと周波数特徴を組み合わせ，融合ネットワークで「どのバンドを攻撃すべきか」を示すマスクを出力
 
 ```
 MobileNetV3特徴量（画像の見た目）
@@ -152,17 +150,17 @@ MobileNetV3特徴量（画像の見た目）
   8次元の帯域マスク（0〜1）
 ```
 
-処理時間は約 5〜10ms と非常に高速です。
+処理時間は約 5〜10ms と非常に高速です．
 
 ---
 
 #### Stage 2 — マルチスケール攻撃（`core/efficient_unmarker.py`）
 
-**目的：** 検出スコアを下げながら（＝ウォーターマークを消しながら）、画像品質をできるだけ維持する。
+**目的：** 検出スコアを下げながら（＝ウォーターマークを消しながら），画像品質をできるだけ維持する．
 
 **処理内容：**
 
-まず **低解像度（256×256）** で粗い最適化を行い、次にオリジナル解像度に戻して **精細な最適化** を行います。
+まず **低解像度（256×256）** で粗い最適化を行い，次にオリジナル解像度に戻して **精細な最適化** を行います．
 
 ```
 低解像度最適化（40回）  → アップスケール →  高解像度最適化（60回）
@@ -187,17 +185,17 @@ MobileNetV3特徴量（画像の見た目）
 
 #### Stage 3 — 品質改善（`core/efficient_unmarker.py`）
 
-**目的：** 攻撃後の画像のノイズを滑らかにして、見た目の品質を向上させる。
+**目的：** 攻撃後の画像のノイズを滑らかにして，見た目の品質を向上させる．
 
-**処理内容：** バターワースローパスフィルタ（`adaptive_low_pass_filter`）で高周波ノイズを除去し、元画像と 9:1 でブレンドします。
+**処理内容：** バターワースローパスフィルタ（`adaptive_low_pass_filter`）で高周波ノイズを除去し，元画像と 9:1 でブレンドします．
 
-デフォルトでは **無効**（`configs/fast_cnn_only.yaml` の `stage3.enabled: false`）です。速度を優先したい場合はこのまま使用してください。
+デフォルトでは **無効**（`configs/fast_cnn_only.yaml` の `stage3.enabled: false`）です．速度を優先したい場合はこのまま使用してください．
 
 ---
 
 ### 検出器（Detector）の仕組み（`core/detection.py`）
 
-ウォーターマークが「まだ残っているか」を判定する心臓部です。
+ウォーターマークが「まだ残っているか」を判定する心臓部です．
 
 #### 3つのモード
 
@@ -221,13 +219,13 @@ MobileNetV3 → 検出スコア（0〜1）
    └─ スコアが確定的な場合 → MobileNetV3の結果をそのまま使用
 ```
 
-`adaptive` モードは精度と速度のバランスを自動で調整します。
+`adaptive` モードは精度と速度のバランスを自動で調整します．
 
 ---
 
 ### 設定ファイル（`configs/fast_cnn_only.yaml`）
 
-YAMLで全パラメータを管理しています。主な設定項目：
+YAMLで全パラメータを管理しています．主な設定項目：
 
 ```yaml
 device: cuda               # GPUを使用
@@ -308,7 +306,7 @@ pip install -r requirements.txt
 
 #### 2. データセットのダウンロード（任意）
 
-[Kaggle - Large-scale Common Watermark Dataset](https://www.kaggle.com/datasets/kamino/largescale-common-watermark-dataset) からダウンロードして `datasets/` に配置します。
+[Kaggle - Large-scale Common Watermark Dataset](https://www.kaggle.com/datasets/kamino/largescale-common-watermark-dataset) からダウンロードして `datasets/` に配置します．
 
 #### 3. ベンチマーク実行
 
@@ -330,7 +328,7 @@ python experiments/benchmark_cnn_only.py \
 python core/efficient_unmarker.py
 ```
 
-512×512 のランダム画像で全パイプラインが動作することを確認できます。
+512×512 のランダム画像で全パイプラインが動作することを確認できます．
 
 ---
 
@@ -345,7 +343,7 @@ Large-scale Common Watermark Dataset の実画像 44 枚で計測：
 | ピーク VRAM | **0.26 GB** | 8 GB 以下 |
 | 平均 PSNR | **23.5 dB** | — |
 
-※ 使用する GPU・ウォーターマークの種類・データセットによって結果は変わります。
+※ 使用する GPU・ウォーターマークの種類・データセットによって結果は変わります．
 
 ---
 
@@ -365,8 +363,8 @@ Large-scale Common Watermark Dataset の実画像 44 枚で計測：
 
 ### ライセンス / 参考文献
 
-本リポジトリは研究・ベンチマーク目的での使用を想定しています。  
-商用利用や大規模利用の際は、以下のオリジナル研究を参照・引用してください：
+本リポジトリは研究・ベンチマーク目的での使用を想定しています．  
+商用利用や大規模利用の際は，以下のオリジナル研究を参照・引用してください：
 
 - **UnMarker: A Universal Attack on Defensive Image Watermarking**  
   <https://github.com/andrekassis/ai-watermark>
